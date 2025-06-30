@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView, useRoute } from 'vue-router'
+import { useAuthStore } from './stores/auth'
+import Navbar from './components/Navbar.vue'
+
+const route = useRoute()
+const auth = useAuthStore()
 </script>
 
 <template>
-  <header>
-    Ah que coucou
-  </header>
-
+  <Navbar v-if="auth.isAuthenticated && route.path !== '/'" />
   <RouterView />
 </template>
 
