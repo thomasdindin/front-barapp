@@ -4,7 +4,8 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
-import Button from "primevue/button"
+import Button from 'primevue/button'
+import Avatar from 'primevue/avatar'
 
 import App from './App.vue'
 import router from './router'
@@ -17,10 +18,11 @@ app.use(PrimeVue, {
     theme: {
         preset: Aura,
         ripple: true,
-        inputVariant: "filled"
+        inputVariant: 'filled'
     }
 });
 app.use(router)
 app.component('Button', Button)
+app.component('Avatar', Avatar)
 
 app.mount('#app')
