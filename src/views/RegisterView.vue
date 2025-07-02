@@ -5,12 +5,18 @@ import { useAuthStore } from '../stores/auth'
 
 const auth = useAuthStore()
 const router = useRouter()
-const username = ref('')
+const email = ref('')
 const password = ref('')
+const nom = ref('')
+const prenom = ref('')
 
 function submit() {
-  auth.register()
-  router.push('/home')
+  auth.register(email.value, password.value, nom.value, prenom.value).then(() => {
+    router.push('/login')
+  }).catch((error) => {
+    console.error('Registration failed:', error)
+    // Optionally, handle registration failure (e.g., show a notification)
+  })
 }
 </script>
 
@@ -18,7 +24,9 @@ function submit() {
   <main class="register">
     <h2>Inscription</h2>
     <div class="form">
-      <input v-model="username" placeholder="Nom d'utilisateur" />
+      <input v-model="nom" placeholder="Nom" />
+      <input v-model="prenom" placeholder="Prénom" />
+      <input v-model="email" placeholder="Email" />
       <input v-model="password" type="password" placeholder="Mot de passe" />
       <Button @click="submit">S'inscrire</Button>
     </div>
@@ -26,17 +34,4 @@ function submit() {
 </template>
 
 <style scoped>
-.register {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding-top: 2rem;
-}
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 200px;
-}
 </style>

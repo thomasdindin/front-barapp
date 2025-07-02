@@ -4,6 +4,13 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from '../stores/auth'
+import CocktailDetails from "@/components/CocktailDetails.vue";
+import CartView from "@/views/CartView.vue";
+import BarmakerView from "@/views/BarmakerView.vue";
+import CocktailsView from "@/views/CocktailsView.vue";
+import IngredientsView from "@/views/IngredientsView.vue";
+import CommandesView from "@/views/CommandesView.vue";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +35,31 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    {
+      path: '/cocktails/:id',
+      name: 'CocktailDetail',
+      component: CocktailDetails,
+      props: true
+    },
+    {
+      path: '/cart',
+        name: 'cart',
+        component: CartView,
+    },
+    {
+      path: '/gestion',
+      component: BarmakerView,
+      beforeEnter: () => {
+        const auth = useAuthStore()
+        if (!auth.isAdmin) return '/login'
+      },
+      children: [
+        { path: '',           redirect: 'cocktails' },
+        { path: 'cocktails',  name: 'gestion-cocktails',  component: CocktailsView },
+        { path: 'ingredients',name: 'gestion-ingredients',component: IngredientsView },
+        { path: 'commandes',     name: 'gestion-commandes',     component: CommandesView },
+      ]
+    }
   ],
 })
 
