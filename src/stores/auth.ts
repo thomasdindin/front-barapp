@@ -4,7 +4,8 @@ import { apiFetch } from '../axios'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: null as string | null,
-    userRole: null as string | null
+    userRole: null as string | null,
+    userId: null as number | null
   }),
   getters: {
     isAuthenticated: state => !!state.token,
@@ -12,13 +13,14 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async login(email: string, password: string) {
-      const { token, userRole } = await apiFetch<{ token: string }>('auth/login', {
+      const { token, userRole, userId } = await apiFetch<{ token: string }>('auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       })
       this.token = token
       this.userRole = userRole
+      this.userId = userId
     },
     async register(email: string, password: string, nom: string, prenom: string) {
       const { token } = await apiFetch<{ token: string }>('users/register', {

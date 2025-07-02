@@ -4,12 +4,14 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import { apiFetch } from '@/axios'
 import type { Commande } from '@/types/Commande'
-
+import {useAuthStore} from "@/stores/auth.ts";
 const commandes = ref<Commande[]>([])
+const auth = useAuthStore();
 
 onMounted(async () => {
   try {
-    commandes.value = await apiFetch<Commande[]>('/commandes')
+    commandes.value = await apiFetch<Commande[]>(`/commandes/client/${auth.userId}`)
+    console.log('Commandes chargées:', commandes.value)
   } catch (e) {
     console.error(e)
   }
@@ -21,7 +23,7 @@ onMounted(async () => {
     <h2 class="mb-3">Mes commandes</h2>
     <div v-for="cmd in commandes" :key="cmd.id" class="mb-4 p-3 border rounded">
       <h3 class="mb-2">Commande #{{ cmd.id }} - {{ cmd.statut }}</h3>
-      <DataTable :value="cmd.lignes" class="p-datatable-sm">
+      <DataTable :value="cmd.ligneCommandes" class="p-datatable-sm">
         <Column field="idVariante.taille" header="Taille" />
         <Column field="idVariante.prix" header="Prix" />
         <Column field="qte" header="Quantité" />

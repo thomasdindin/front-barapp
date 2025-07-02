@@ -30,7 +30,7 @@ const logout = () => {
     </div>
 
     <div class="flex gap-2">
-      <OverlayBadge :value="cart.itemCount" v-if="!auth.isAdmin">
+      <OverlayBadge :value="cart.itemCount" v-if="!auth.isAdmin" severity="warn" size="small" style="z-index: 999">
         <Button icon="fa-solid fa-cart-shopping" @click="router.push('/cart')"/>
       </OverlayBadge>
       <Button icon="fa-solid fa-right-from-bracket" @click="logout"/>

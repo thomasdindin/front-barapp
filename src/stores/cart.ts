@@ -3,6 +3,7 @@ import type { Cocktail } from '@/types/Cocktail'
 import type { Variante } from '@/types/Variante'
 import { apiFetch } from '@/axios'
 import type { Commande } from '@/types/Commande'
+import {useAuthStore} from "@/stores/auth.ts";
 
 export interface CartItem {
   cocktail: Cocktail
@@ -39,10 +40,13 @@ export const useCartStore = defineStore('cart', {
       }
     },
     async checkout(): Promise<Commande> {
+
+      console.log(useAuthStore().userId)
+      console.log(this.items)
       const payload = {
-        lignes: this.items.map(i => ({
+        idUtilisateur: useAuthStore().userId,
+        ligneCommandes: this.items.map(i => ({
           qte: i.quantity,
-          statut: 'EN_ATTENTE',
           idVariante: i.variante
         }))
       }
@@ -51,7 +55,7 @@ export const useCartStore = defineStore('cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      })
+    })
 
       this.clear()
       return commande
