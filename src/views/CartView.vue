@@ -19,6 +19,16 @@ function updateQty(index: number, value: number) {
 function remove(index: number) {
   cart.removeItem(index)
 }
+
+async function checkout() {
+  try {
+    const order = await cart.checkout()
+    // Optionnel: redirection ou message
+    console.log('Commande créée', order)
+  } catch (e) {
+    console.error(e)
+  }
+}
 </script>
 
 <template>
@@ -49,6 +59,7 @@ function remove(index: number) {
       </Column>
     </DataTable>
     <div class="total">Total : {{ totalPrice.toFixed(2) }} €</div>
+    <Button class="mt-2" label="Valider la commande" @click="checkout" />
   </div>
 </main>
 </template>
