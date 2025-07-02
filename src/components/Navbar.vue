@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import Avatar from 'primevue/avatar'
+import OverlayBadge from 'primevue/overlaybadge'
 import { useAuthStore } from '../stores/auth'
+import { useCartStore } from '../stores/cart'
 import router from "@/router";
 
 const auth = useAuthStore()
+const cart = useCartStore()
 
 const logout = () => {
   auth.logout()
@@ -22,7 +25,9 @@ const logout = () => {
     </div>
 
     <div class="flex gap-2">
-      <Button icon="fa-solid fa-cart-shopping" @click="router.push('/cart')"/>
+      <OverlayBadge :value="cart.itemCount" v-if="!auth.isAdmin">
+        <Button icon="fa-solid fa-cart-shopping" @click="router.push('/cart')"/>
+      </OverlayBadge>
       <Button icon="fa-solid fa-right-from-bracket" @click="logout"/>
     </div>
   </nav>

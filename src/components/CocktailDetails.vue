@@ -24,6 +24,11 @@
             <Column field="taille" header="Taille"/>
             <Column field="prix" header="Prix (€)"/>
           </DataTable>
+          <div class="flex gap-2 items-center mt-3">
+            <Dropdown v-model="selectedVariante" :options="cocktail.variantes" optionLabel="taille" placeholder="Taille" class="w-6rem" />
+            <InputNumber v-model="quantity" :min="1" />
+            <Button label="Ajouter au panier" icon="pi pi-shopping-cart" @click="addToCart" />
+          </div>
         </Panel>
       </div>
   </div>
@@ -41,6 +46,9 @@ import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Image from 'primevue/image'
+import Dropdown from 'primevue/dropdown'
+import InputNumber from 'primevue/inputnumber'
+import { useCartStore } from '@/stores/cart'
 
 interface Ingredient { id: number; libelle: string }
 interface Variante { idVariante: number; taille: string; prix: number }
@@ -61,6 +69,10 @@ const cocktail = ref<CocktailDetail|null>(null)
 
 // URL de la miniature (200×200)
 const imageUrl = ref<string>(cocktail.image || '')
+
+const cart = useCartStore()
+const selectedVariante = ref<Variante | null>(null)
+const quantity = ref(1)
 
 onMounted(async () => {
   try {
@@ -91,6 +103,12 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+function addToCart() {
+  if (cocktail.value && selectedVariante.value) {
+    cart.addItem(cocktail.value, selectedVariante.value, quantity.value)
+  }
+}
 </script>
 
 <style scoped>

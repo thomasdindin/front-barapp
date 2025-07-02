@@ -43,8 +43,13 @@ const router = createRouter({
     },
     {
       path: '/cart',
-        name: 'cart',
-        component: CartView,
+      name: 'cart',
+      component: CartView,
+      beforeEnter: () => {
+        const auth = useAuthStore()
+        if (auth.isAdmin) return '/home'
+        if (!auth.isAuthenticated) return '/login'
+      }
     },
     {
       path: '/gestion',
