@@ -10,6 +10,7 @@ import BarmakerView from "@/views/BarmakerView.vue";
 import CocktailsView from "@/views/CocktailsView.vue";
 import IngredientsView from "@/views/IngredientsView.vue";
 import CommandesView from "@/views/CommandesView.vue";
+import OrdersView from "@/views/OrdersView.vue";
 
 
 const router = createRouter({
@@ -45,6 +46,16 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: CartView,
+      beforeEnter: () => {
+        const auth = useAuthStore()
+        if (auth.isAdmin) return '/home'
+        if (!auth.isAuthenticated) return '/login'
+      }
+    },
+    {
+      path: '/mes-commandes',
+      name: 'orders',
+      component: OrdersView,
       beforeEnter: () => {
         const auth = useAuthStore()
         if (auth.isAdmin) return '/home'

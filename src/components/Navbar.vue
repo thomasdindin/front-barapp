@@ -24,6 +24,11 @@ const logout = () => {
       <Button severity="secondary" @click="router.push('/gestion/commandes')">Commandes</Button>
     </div>
 
+    <div v-else class="flex gap-2">
+      <Button severity="secondary" @click="router.push('/home')">Accueil</Button>
+      <Button severity="secondary" @click="router.push('/mes-commandes')">Mes commandes</Button>
+    </div>
+
     <div class="flex gap-2">
       <OverlayBadge :value="cart.itemCount" v-if="!auth.isAdmin">
         <Button icon="fa-solid fa-cart-shopping" @click="router.push('/cart')"/>

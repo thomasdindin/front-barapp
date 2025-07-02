@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import type { Cocktail } from '@/types/Cocktail'
 import type { Variante } from '@/types/Variante'
+import { apiFetch } from '@/axios'
+import type { Commande } from '@/types/Commande'
 
 export interface CartItem {
   cocktail: Cocktail
@@ -35,6 +37,24 @@ export const useCartStore = defineStore('cart', {
       } else {
         this.items[index].quantity = quantity
       }
+    },
+    async checkout(): Promise<Commande> {
+      const payload = {
+        lignes: this.items.map(i => ({
+          qte: i.quantity,
+          statut: 'EN_ATTENTE',
+          idVariante: i.variante
+        }))
+      }
+
+      const commande = await apiFetch<Commande>('/commandes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+
+      this.clear()
+      return commande
     },
     clear() {
       this.items = []
