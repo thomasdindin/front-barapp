@@ -11,6 +11,7 @@ import CocktailsView from "@/views/CocktailsView.vue";
 import IngredientsView from "@/views/IngredientsView.vue";
 import CommandesView from "@/views/CommandesView.vue";
 import OrdersView from "@/views/OrdersView.vue";
+import CategorieView from "@/views/CategorieView.vue";
 
 
 const router = createRouter({
@@ -73,6 +74,7 @@ const router = createRouter({
         { path: '',           redirect: 'cocktails' },
         { path: 'cocktails',  name: 'gestion-cocktails',  component: CocktailsView },
         { path: 'ingredients',name: 'gestion-ingredients',component: IngredientsView },
+        { path: 'categories',    name: 'gestion-categories',    component: CategorieView },
         { path: 'commandes',     name: 'gestion-commandes',     component: CommandesView },
       ]
     }

@@ -29,6 +29,7 @@ const logout = () => {
       <div v-if="auth.isAdmin" class="flex gap-2 justify-center">
         <Button severity="secondary" variant="text" @click="router.push('/gestion/cocktails')" >Cocktails</Button>
         <Button severity="secondary" variant="text" @click="router.push('/gestion/ingredients')">Ingrédients</Button>
+        <Button severity="secondary" variant="text" @click="router.push('/gestion/categories')">Catégories</Button>
         <Button severity="secondary" variant="text" @click="router.push('/gestion/commandes')">Commandes</Button>
       </div>
 

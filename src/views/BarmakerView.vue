@@ -40,6 +40,7 @@ const route = useRoute()
 const tabs = [
   { route: '/gestion/cocktails',   label: 'Cocktails',        icon: 'pi pi-glass' },
   { route: '/gestion/ingredients', label: 'Ingrédients',      icon: 'pi pi-tags'  },
+  { route: '/gestion/categories', label: 'Catégories', icon: 'pi pi-tags'},
   { route: '/gestion/commandes',   label: 'Suivi Commandes',  icon: 'pi pi-shopping-cart' },
 ]
 
