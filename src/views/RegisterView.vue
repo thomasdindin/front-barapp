@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import InputText from 'primevue/inputtext'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -21,14 +22,17 @@ function submit() {
 </script>
 
 <template>
-  <main class="register">
-    <h2>Inscription</h2>
-    <div class="form">
-      <input v-model="nom" placeholder="Nom" />
-      <input v-model="prenom" placeholder="Prénom" />
-      <input v-model="email" placeholder="Email" />
-      <input v-model="password" type="password" placeholder="Mot de passe" />
-      <Button @click="submit">S'inscrire</Button>
+  <main class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-sm p-6 rounded-lg shadow-lg bg-white dark:bg-slate-800">
+      <h1 class="text-center text-2xl font-bold mb-4">Bar'App</h1>
+      <h2 class="text-xl mb-4 text-center">Inscription</h2>
+      <div class="flex flex-col gap-3">
+        <InputText v-model="nom" placeholder="Nom" class="w-full" />
+        <InputText v-model="prenom" placeholder="Prénom" class="w-full" />
+        <InputText v-model="email" placeholder="Email" class="w-full" />
+        <InputText v-model="password" type="password" placeholder="Mot de passe" class="w-full" />
+        <Button @click="submit" label="S'inscrire" />
+      </div>
     </div>
   </main>
 </template>
