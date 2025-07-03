@@ -40,7 +40,7 @@ const route = useRoute()
 const tabs = [
   { route: '/gestion/cocktails',   label: 'Cocktails',        icon: 'pi pi-glass' },
   { route: '/gestion/ingredients', label: 'Ingrédients',      icon: 'pi pi-tags'  },
-  { route: '/gestion/orders',      label: 'Suivi Commandes',  icon: 'pi pi-shopping-cart' },
+  { route: '/gestion/commandes',   label: 'Suivi Commandes',  icon: 'pi pi-shopping-cart' },
 ]
 
 const activeRoute = ref(route.path)

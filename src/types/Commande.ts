@@ -5,5 +5,5 @@ export interface Commande {
   id: number
   statut: string
   idUtilisateur: Utilisateur
-  lignes: LigneCommande[]
+  ligneCommandes: LigneCommande[]
 }
