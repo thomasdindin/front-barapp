@@ -241,12 +241,15 @@ async function saveCocktail() {
 async function deleteCocktail() {
   if (!cocktailForm.value) return
   if (confirm('Confirmez la suppression ?')) {
-    await apiFetch<void>(`/cocktails/${cocktailForm.value.id}`, { method: 'DELETE' })
-    cocktailForm.value = null
-    selectedCocktail.value = null
-    selectedCategorieId.value = null
-    selectedIngredients.value = []
-    await loadCocktails()
+    try {
+      await apiFetch<void>(`/cocktails/${cocktailForm.value.id}`, { method: 'DELETE' })
+    } finally {
+      cocktailForm.value = null
+      selectedCocktail.value = null
+      selectedCategorieId.value = null
+      selectedIngredients.value = []
+      await loadCocktails()
+    }
   }
 }
 

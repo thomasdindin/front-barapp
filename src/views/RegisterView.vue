@@ -31,6 +31,7 @@ function submit() {
         <InputText v-model="prenom" placeholder="Prénom" class="w-full" />
         <InputText v-model="email" placeholder="Email" class="w-full" />
         <InputText v-model="password" type="password" placeholder="Mot de passe" class="w-full" />
+        <Button variant="link" @click="router.push('/login')" label="Déjà inscrit ? Connectez-vous" />
         <Button @click="submit" label="S'inscrire" />
       </div>
     </div>

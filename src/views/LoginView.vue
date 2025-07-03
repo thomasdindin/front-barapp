@@ -27,6 +27,7 @@ function submit() {
       <div class="flex flex-col gap-3">
         <InputText v-model="email" placeholder="Email" class="w-full" />
         <InputText v-model="password" type="password" placeholder="Mot de passe" class="w-full" />
+        <Button variant="link" @click="router.push('/register')" label="Pas encore inscrit ? Créez un compte" />
         <Button @click="submit" label="Se connecter" />
       </div>
     </div>
