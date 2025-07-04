@@ -22,35 +22,25 @@
     <div class="w-full lg:w-1/4"></div>
 
     <!-- Dialog création/édition/suppression -->
-    <Dialog :header="dialogHeader" v-model:visible="displayDialog" modal>
-      <div class="p-fluid">
-        <div class="p-field">
-          <label for="libelle">Libellé</label>
-          <InputText id="libelle" v-model="editedIngredient.libelle" />
-        </div>
-      </div>
-      <template #footer>
-        <div class="flex justify-end gap-2">
-          <Button label="Annuler" icon="pi pi-times" class="p-button-text" @click="cancelEdit" />
-          <Button label="Supprimer" icon="pi pi-trash" class="p-button-danger" v-if="editedIngredient.id > 0" @click="deleteIngredient(editedIngredient.id)" />
-          <Button label="Enregistrer" icon="pi pi-check" @click="saveIngredient" />
-        </div>
-      </template>
-    </Dialog>
+    <IngredientDialog
+        :ingredient="editedIngredient"
+        v-model:visible="displayDialog"
+        @save="saveIngredient"
+        @delete="removeIngredient(editedIngredient.id)"
+        @cancel="cancelEdit"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, h, computed} from 'vue'
-import {useAuthStore} from "@/stores/auth.ts";
-import axios from "axios";
+import {ref, onMounted, computed} from 'vue'
 import { FilterMatchMode } from '@primevue/core/api'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
-import Dialog from 'primevue/dialog'
-import { apiFetch } from '@/axios'
+import IngredientDialog from '@/components/IngredientDialog.vue'
+import { getIngredients, createIngredient, updateIngredient, deleteIngredient as deleteIngredientApi } from '@/services/ingredientService'
 import {Ingredient} from "@/types/Ingredient.ts";
 
 // State
@@ -58,14 +48,13 @@ const ingredients = ref<Ingredient[]>([])
 const globalFilter = ref<string>('')
 const displayDialog = ref<boolean>(false)
 const editedIngredient = ref<Ingredient>({ id: 0, libelle: '' })
-const auth = useAuthStore()
 
 onMounted(async () => {
   await loadIngredients()
 })
 
 async function loadIngredients() {
-  ingredients.value = await apiFetch<Ingredient[]>('/ingredients')
+  ingredients.value = await getIngredients()
 }
 
 function onRowClick(event: { data: Ingredient }) {
@@ -85,34 +74,22 @@ function cancelEdit() {
 async function saveIngredient() {
   const ing = editedIngredient.value
   if (ing.id > 0) {
-    await apiFetch<Ingredient>(`/ingredients/${ing.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ libelle: ing.libelle })
-    })
+    await updateIngredient(ing.id, { libelle: ing.libelle })
   } else {
-    await apiFetch<Ingredient>('/ingredients', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ libelle: ing.libelle })
-    })
+    await createIngredient({ libelle: ing.libelle })
   }
   displayDialog.value = false
   await loadIngredients()
 }
 
-async function deleteIngredient(id: number) {
+async function removeIngredient(id: number) {
   if (confirm(`Supprimer l'ingrédient ${id} ?`)) {
-    axios.delete(`http://localhost:8080/api/ingredients/${id}`, {
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${auth.token}` }
-
-    })
-      .then(() => {
-        displayDialog.value = false
-      })
-      .catch(err => {
-        console.error('Erreur lors de la suppression:', err)
-      })
+    try {
+      await deleteIngredientApi(id)
+      displayDialog.value = false
+    } catch (err) {
+      console.error('Erreur lors de la suppression:', err)
+    }
     await loadIngredients()
   }
 }

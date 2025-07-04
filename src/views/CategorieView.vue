@@ -72,17 +72,14 @@ import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
-import { apiFetch } from '@/axios'
+import { getCategories, createCategory, updateCategory, deleteCategory } from '@/services/categoryService'
 import type { Categorie } from '@/types/Categorie.ts'
-import { useAuthStore } from '@/stores/auth.ts'
-import axios from 'axios'
 
 // State
 const categories = ref<Categorie[]>([])
 const globalFilter = ref<string>('')
 const displayDialog = ref<boolean>(false)
 const editedCategory = ref<Categorie>({ idCategorie: 0, libelle: '' })
-const auth = useAuthStore()
 
 // Chargement initial
 onMounted(async () => {
@@ -90,7 +87,7 @@ onMounted(async () => {
 })
 
 async function loadCategories() {
-  categories.value = await apiFetch<Categorie[]>('/categories')
+  categories.value = await getCategories()
 }
 
 function onRowClick(event: { data: Categorie }) {
@@ -110,17 +107,9 @@ function cancelEdit() {
 async function saveCategory() {
   const cat = editedCategory.value
   if (cat.idCategorie > 0) {
-    await apiFetch<Categorie>(`/categories`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(cat)
-    })
+    await updateCategory(cat)
   } else {
-    await apiFetch<Categorie>('/categories', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({libelle: cat.libelle})
-    })
+    await createCategory({ libelle: cat.libelle })
   }
   displayDialog.value = false
   await loadCategories()
@@ -129,12 +118,7 @@ async function saveCategory() {
 async function deleteCategory(id: number) {
   if (confirm(`Supprimer la catégorie ${id} ?`)) {
     try {
-      await axios.delete(`http://localhost:8080/api/categories/${id}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${auth.token}`
-        }
-      })
+      await deleteCategory(id)
       displayDialog.value = false
     } catch (err) {
       console.error('Erreur lors de la suppression :', err)
