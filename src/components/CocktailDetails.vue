@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { apiFetch } from '@/axios.ts'
+import { getCocktail } from '@/services/cocktailService'
 import Skeleton from 'primevue/skeleton'
 import Panel from "primevue/panel";
 import Button from 'primevue/button'
@@ -77,7 +77,7 @@ const quantity = ref(1)
 onMounted(async () => {
   try {
     // 1) On charge les données du cocktail
-    cocktail.value = await apiFetch<CocktailDetail>(`/cocktails/${id}`)
+    cocktail.value = await getCocktail(id) as CocktailDetail
 
     // 2) Si on a déjà une URL dans l'entité, on l'affiche
     if (cocktail.value?.image) {

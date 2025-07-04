@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import { apiFetch } from '@/axios'
+import { getCommandesByClient } from '@/services/commandeService'
 import type { Commande } from '@/types/Commande'
 import {useAuthStore} from "@/stores/auth.ts";
 const commandes = ref<Commande[]>([])
@@ -10,7 +10,7 @@ const auth = useAuthStore();
 
 onMounted(async () => {
   try {
-    commandes.value = await apiFetch<Commande[]>(`/commandes/client/${auth.userId}`)
+    commandes.value = await getCommandesByClient(auth.userId!)
     console.log('Commandes chargées:', commandes.value)
   } catch (e) {
     console.error(e)

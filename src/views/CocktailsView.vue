@@ -90,7 +90,7 @@
               label="Supprimer"
               icon="pi pi-trash"
               class="p-button-danger"
-              @click="deleteCocktail"
+              @click="removeCocktail"
           />
         </div>
       </div>
@@ -111,7 +111,9 @@ import Textarea from 'primevue/textarea'
 import InputNumber from 'primevue/inputnumber'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown'
-import {apiFetch} from '@/axios'
+import { getCocktails, createCocktail, updateCocktail, deleteCocktail } from '@/services/cocktailService'
+import { getIngredients } from '@/services/ingredientService'
+import { getCategories } from '@/services/categoryService'
 import type {Cocktail} from '@/types/Cocktail.ts'
 import type {Ingredient} from '@/types/Ingredient.ts'
 import type {Categorie} from '@/types/Categorie.ts'
@@ -137,13 +139,13 @@ onMounted(async () => {
 
 // Load data
 async function loadCategories() {
-  categories.value = await apiFetch<Categorie[]>('/categories')
+  categories.value = await getCategories()
 }
 async function loadIngredients() {
-  ingredients.value = await apiFetch<Ingredient[]>('/ingredients')
+  ingredients.value = await getIngredients()
 }
 async function loadCocktails() {
-  cocktails.value = await apiFetch<Cocktail[]>('/cocktails')
+  cocktails.value = await getCocktails()
 }
 
 // Sélection d'une ligne
@@ -205,18 +207,10 @@ async function saveCocktail() {
     }
   let saved: Cocktail
   if (payload.id > 0) {
-    saved = await apiFetch<Cocktail>(`/cocktails`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    saved = await updateCocktail(payload)
   } else {
     // On créé le produit :
-    saved = await apiFetch<Cocktail>('/cocktails', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    saved = await createCocktail(payload)
 
     // On ajoute les variantes
     payload = {
@@ -228,21 +222,17 @@ async function saveCocktail() {
       variantes: base.variantes.map(v => ({ taille: v.taille, prix: v.prix, idCocktail: saved.id}))
     }
 
-    saved = await apiFetch<Cocktail>(`/cocktails`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    saved = await updateCocktail(payload)
   }
   onRowSelect({ data: saved })
   await loadCocktails()
 }
 
-async function deleteCocktail() {
+async function removeCocktail() {
   if (!cocktailForm.value) return
   if (confirm('Confirmez la suppression ?')) {
     try {
-      await apiFetch<void>(`/cocktails/${cocktailForm.value.id}`, { method: 'DELETE' })
+      await deleteCocktail(cocktailForm.value.id!)
     } finally {
       cocktailForm.value = null
       selectedCocktail.value = null

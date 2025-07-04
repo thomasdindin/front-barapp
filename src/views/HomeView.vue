@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import DataView from 'primevue/dataview'
-import { apiFetch } from '@/axios.ts'
+import { getCocktailsByCategory } from '@/services/cocktailService'
 import Skeleton from 'primevue/skeleton'
 import CocktailCard from '@/components/CocktailCard.vue'
 import OverlayBadge from "primevue/overlaybadge";
@@ -20,7 +20,7 @@ interface Category { libelle: string; cocktails: Cocktail[] }
 const loading    = ref(true)
 const categories = ref<Category[]>([])
 
-apiFetch<CategoriesResponse>('/cocktails/by-category')
+getCocktailsByCategory()
     .then(data => {
       categories.value = Object
           .entries(data)

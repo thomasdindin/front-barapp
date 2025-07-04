@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dropdown from 'primevue/dropdown'
-import { apiFetch } from '@/axios'
+import { getCommandes, updateCommande, updateLigneCommande } from '@/services/commandeService'
 import type { Commande } from '@/types/Commande'
 
 const commandes = ref<Commande[]>([])
@@ -11,15 +11,15 @@ const STATUTS = ['EN_ATTENTE', 'EN_PREPARATION', 'TERMINEE']
 
 async function load() {
   try {
-    commandes.value = await apiFetch<Commande[]>('/commandes')
+    commandes.value = await getCommandes()
   } catch (e) {
     console.error(e)
   }
 }
 
-async function updateCommande(id: number, statut: string) {
+async function updateCommandeStatus(id: number, statut: string) {
   try {
-    await apiFetch(`/commandes/${id}?statut=${statut}`, { method: 'PUT' })
+    await updateCommande(id, statut)
     await load()
   } catch (e) {
     console.error(e)
@@ -28,7 +28,7 @@ async function updateCommande(id: number, statut: string) {
 
 async function updateLigne(id: number, statut: string) {
   try {
-    await apiFetch(`/commandes/lignes/${id}?statut=${statut}`, { method: 'PUT' })
+    await updateLigneCommande(id, statut)
     await load()
   } catch (e) {
     console.error(e)
@@ -51,7 +51,7 @@ onUnmounted(() => clearInterval(intervalId))
     <div v-for="cmd in commandes" :key="cmd.id" class="mb-4 p-3 border rounded">
       <div class="flex justify-between items-center mb-2">
         <h3 class="font-semibold">Commande #{{ cmd.id }} - {{ cmd.idUtilisateur.prenom }} {{ cmd.idUtilisateur.nom }}</h3>
-        <Dropdown :modelValue="cmd.statut" :options="STATUTS" class="w-40" @update:modelValue="val => updateCommande(cmd.id, val as string)" />
+        <Dropdown :modelValue="cmd.statut" :options="STATUTS" class="w-40" @update:modelValue="val => updateCommandeStatus(cmd.id, val as string)" />
       </div>
       <DataTable :value="cmd.ligneCommandes" class="p-datatable-sm">
         <Column field="idVariante.taille" header="Taille" />
