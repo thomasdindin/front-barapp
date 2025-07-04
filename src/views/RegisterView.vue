@@ -11,13 +11,12 @@ const password = ref('')
 const nom = ref('')
 const prenom = ref('')
 
-function submit() {
-  auth.register(email.value, password.value, nom.value, prenom.value).then(() => {
+async function submit() {
+  try {
+    await auth.register(email.value, password.value, nom.value, prenom.value);
+  } finally {
     router.push('/login')
-  }).catch((error) => {
-    console.error('Registration failed:', error)
-    // Optionally, handle registration failure (e.g., show a notification)
-  })
+  }
 }
 </script>
 

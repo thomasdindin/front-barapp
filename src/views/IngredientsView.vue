@@ -59,6 +59,7 @@ async function loadIngredients() {
 
 function onRowClick(event: { data: Ingredient }) {
   editedIngredient.value = { ...event.data }
+  console.log('Selected ingredient:', editedIngredient.value.id)
   displayDialog.value = true
 }
 
@@ -74,7 +75,7 @@ function cancelEdit() {
 async function saveIngredient() {
   const ing = editedIngredient.value
   if (ing.id > 0) {
-    await updateIngredient(ing.id, { libelle: ing.libelle })
+    await updateIngredient({ id: ing.id, libelle: ing.libelle })
   } else {
     await createIngredient({ libelle: ing.libelle })
   }

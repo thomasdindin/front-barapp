@@ -13,8 +13,8 @@ export function createIngredient(data: { libelle: string }) {
   })
 }
 
-export function updateIngredient(id: number, data: { libelle: string }) {
-  return apiFetch<Ingredient>(`/ingredients/${id}`, {
+export function updateIngredient(data: {id:int, libelle: string }) {
+  return apiFetch<Ingredient>(`/ingredients`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)

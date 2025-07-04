@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
@@ -31,7 +31,7 @@ const visible = computed({
   set: val => emit('update:visible', val)
 })
 
-const ingredient = props.ingredient
+const ingredient = toRef(props, 'ingredient')
 
-const header = computed(() => ingredient.id > 0 ? "Éditer l'ingrédient" : "Nouvel ingrédient")
+const header = computed(() => ingredient.value.id > 0 ? "Éditer l'ingrédient" : "Nouvel ingrédient")
 </script>
